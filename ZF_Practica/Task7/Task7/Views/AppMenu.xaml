@@ -1,0 +1,132 @@
+﻿<UserControl x:Class="Task7.Views.AppMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Task7"
+             xmlns:models="clr-namespace:Task7.Models"
+             xmlns:Converter="clr-namespace:Task7.ViewModels.Converter"
+             mc:Ignorable="d"              
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <Converter:ReloadConverter x:Key="reloadConverter" />
+        <Converter:RadioButtonCheckedConverter x:Key="radioButtonCheckedConverter" />
+    </UserControl.Resources>
+
+    <Menu>
+        <MenuItem Header="_File">
+            <MenuItem x:Name="menuIni" Header="Ini File">
+                <MenuItem.Icon>
+                    <Image Source="/Icons/open.ico" Width="20" Stretch="Uniform"/>
+                </MenuItem.Icon>
+                <MenuItem x:Name="menuIniNew" Header="Open New Ini" Command="{Binding Path=OpenCommand, UpdateSourceTrigger=PropertyChanged}" >
+                    <MenuItem.CommandParameter>
+                        <MultiBinding Converter="{StaticResource reloadConverter}">
+                            <Binding Path="IsChecked" ElementName="menuIgnoreComp"/>
+                            <Binding Path="Name"  ElementName="menuIniNew"/>
+                        </MultiBinding>
+                    </MenuItem.CommandParameter>
+                    <MenuItem.Icon>
+                        <Image Source="/Icons/load.ico" Stretch="Uniform" Width="20" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="menuIniReload" Header="Reload Ini" Command="{Binding Path=OpenCommand, UpdateSourceTrigger=PropertyChanged}" >
+                    <MenuItem.CommandParameter>
+                        <MultiBinding Converter="{StaticResource reloadConverter}">
+                            <Binding Path="IsChecked" ElementName="menuIgnoreComp"/>
+                            <Binding Path="Name"  ElementName="menuIniReload"/>
+                        </MultiBinding>
+                    </MenuItem.CommandParameter>
+                    <MenuItem.Icon>
+                        <Image Source="/Icons/gear2.ico" Stretch="Uniform" Width="20" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem x:Name="menuExp" Header="_Export">
+                <MenuItem.Icon>
+                    <Image Source="/Icons/export.ico" Stretch="Uniform" Width="20" />
+                </MenuItem.Icon>
+                <MenuItem x:Name="menuExpOrig" Header="Export Original">
+                    <MenuItem x:Name="menuExpOrigXML" Header="XML">
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/xml.ico" Stretch="Uniform" Width="20" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="menuExpOrigExc" Header="Excel" InputGestureText="F4">
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/excel.ico" Stretch="Uniform" Width="20" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="menuExpOrigCSV" Header="CSV" Command="{Binding Path=ExportCommand}" InputGestureText="F3">
+                        <MenuItem.CommandParameter>
+                            <MultiBinding Converter="{StaticResource reloadConverter}">
+                                <Binding Path="Name" ElementName="menuExpOrigCSV"/>
+                            </MultiBinding>
+                        </MenuItem.CommandParameter>
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/csv.ico" Stretch="Uniform" Width="20" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem x:Name="menuExpBud" Header="Budget Overview">
+                    <MenuItem x:Name="menuExpBudExc" Header="Excel" InputGestureText="F6">
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/excel.ico" Stretch="Uniform" Width="20" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem x:Name="menuExpMem" Header="Memory Partition View">
+                    <MenuItem x:Name="menuExpMemExc" Header="Excel" InputGestureText="F8">
+                        <MenuItem.Icon>
+                            <Image Source="/Icons/excel.ico" Stretch="Uniform" Width="20" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem x:Name="menuPrint" Header="_Print">
+                <MenuItem.Icon>
+                    <Image Source="/Icons/print.ico" Stretch="Uniform" Width="20" />
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem x:Name="menuExit" Header="_Exit" Command="{Binding Path=CloseWindowCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}">
+                <MenuItem.Icon>
+                    <Image Source="/Icons/delete.ico" Stretch="Uniform" Width="20" />
+                </MenuItem.Icon>
+            </MenuItem>
+        </MenuItem>
+
+        <MenuItem Header="_Settings">
+            <MenuItem x:Name="menuIgnoreComp" Header="Ignore Sections" IsCheckable="True" IsChecked="True"/>
+            <MenuItem x:Name="menuPart" Header="Partitions">
+                <MenuItem.Icon>
+                    <Image Source="/Icons/dialogue.ico" Stretch="Uniform" Width="20" />
+                </MenuItem.Icon>
+                <MenuItem x:Name="menuTabOrig" Header="Original View" Command="{Binding PartitionsViewCommand}" CommandParameter="{Binding ElementName=menuTabOrig}" IsCheckable="True" IsChecked="{Binding RadioOptions, Mode=OneWay, Converter={StaticResource radioButtonCheckedConverter}, ConverterParameter={x:Static models:ViewEnum.Orig}}"/>
+                <MenuItem x:Name="menuTabMem" Header="Memory Partitions View" Command="{Binding PartitionsViewCommand}" CommandParameter="{Binding ElementName=menuTabMem}" IsCheckable="True" IsChecked="{Binding RadioOptions, Mode=OneWay, Converter={StaticResource radioButtonCheckedConverter}, ConverterParameter={x:Static models:ViewEnum.Mem}}"/>
+                <MenuItem x:Name="menuTabAll" Header="All Tabs" Command="{Binding PartitionsViewCommand}" CommandParameter="{Binding ElementName=menuTabAll}" IsCheckable="True" IsChecked="{Binding RadioOptions, Mode=OneWay, Converter={StaticResource radioButtonCheckedConverter}, ConverterParameter={x:Static models:ViewEnum.All}}"/>
+            </MenuItem>
+        </MenuItem>
+
+        <MenuItem Header="_View">
+            <MenuItem x:Name="menuDefault" Header="Restore Default View">
+                <MenuItem.Icon>
+                    <Image Source="/Icons/lockedon.ico" Stretch="Uniform" Width="20" />
+                </MenuItem.Icon>
+            </MenuItem>
+        </MenuItem>
+
+        <MenuItem Header="Help">
+            <MenuItem x:Name="menuAbout" Header="_About" Command="{Binding Path=OpenAboutCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}">
+                <MenuItem.Icon>
+                    <Image Source="/Icons/about.ico" Stretch="Uniform" Width="20" />
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem x:Name="menuHelp" Header="_Help" Command="{Binding Path=OpenHelpCommand}" >
+                <MenuItem.Icon>
+                    <Image Source="/Icons/help.ico" Stretch="Uniform" Width="20" />
+                </MenuItem.Icon>
+            </MenuItem>
+        </MenuItem>
+    </Menu>
+</UserControl>
