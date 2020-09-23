@@ -1,0 +1,143 @@
+﻿<Window x:Class="Task7.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="clr-namespace:Task7.Models"
+        xmlns:vm="clr-namespace:Task7.ViewModels"
+        xmlns:local="clr-namespace:Task7"
+        xmlns:views="clr-namespace:Task7.Views"
+        xmlns:Converter="clr-namespace:Task7.ViewModels.Converter"
+        xmlns:tsk6="clr-namespace:Task6;assembly=Task6"
+        xmlns:tsk4="clr-namespace:Task4;assembly=Task4"
+        mc:Ignorable="d"
+        Title="Map File Analyzer" Height="450" Width="800" MinWidth="500" MinHeight="150" Icon="/Icons/zf.ico">
+
+    <!--<Window.CommandBindings>
+        <CommandBinding Command="Open" CanExecute="CommandBindingOpen_CanExecute" Executed="CommandBindingOpen_Executed"/>
+    </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <KeyBinding Key="F5"/>
+    </Window.InputBindings>-->
+
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+
+    <Window.Resources>
+        <Converter:BackgroundConverter x:Key="backgroundConverter"/>
+    </Window.Resources>
+
+    <DockPanel>
+        <views:AppMenu DockPanel.Dock="Top" />
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TabControl SelectedIndex="{Binding Selected}" Grid.Row="0" Grid.Column="0">
+                <TabItem x:Name="OrigTab" Header="Original" Visibility="{Binding IsFirstTabVisible}">
+                    <TreeView x:Name="FolderView" ItemsSource="{Binding Path=Tree}">
+                        <TreeView.Resources>
+                            <HierarchicalDataTemplate DataType="{x:Type tsk6:IStructure}" ItemsSource="{Binding Path=Children}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image  Width="12" Margin="3" Source="{Binding Icon}" />
+                                    <TextBlock x:Name="StructureItem" Text="{Binding Name}" >
+                                        <TextBlock.InputBindings>
+                                            <MouseBinding Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
+                                                AncestorType={x:Type local:MainWindow}}, 
+                                                Path=DataContext.DatagridPreviewCommand}" 
+                                                          CommandParameter="{Binding}"
+                                                          MouseAction="LeftClick" />
+                                        </TextBlock.InputBindings>
+                                    </TextBlock>
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeView.Resources>
+                    </TreeView>
+                </TabItem>
+                <TabItem x:Name="MemTab" Header="Memory Partitions" Visibility="{Binding IsSecondTabVisible}">
+                    <ListView x:Name="PartitionView" ItemsSource="{Binding Path=PartitionsTree}" SelectionMode="Single">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}" >
+                                        <TextBlock.InputBindings>
+                                            <MouseBinding Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
+                                                AncestorType={x:Type local:MainWindow}}, 
+                                                Path=DataContext.PartitionsDatagridPreviewCommand}" 
+                                                          CommandParameter="{Binding}"
+                                                          MouseAction="LeftClick" />
+                                        </TextBlock.InputBindings>
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <!--<TreeView x:Name="PartitionView" ItemsSource="{Binding Path=PartitionsTree}">
+                        <TreeView.Resources>
+                            <DataTemplate DataType="{x:Type tsk4:IMemorySection}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}">
+                                        <TextBlock.InputBindings>
+                                            <MouseBinding Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
+                                                AncestorType={x:Type local:MainWindow}}, 
+                                                Path=DataContext.PartitionsDatagridPreviewCommand}" 
+                                                          CommandParameter="{Binding}"
+                                                          MouseAction="LeftClick" />
+                                        </TextBlock.InputBindings>
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </TreeView.Resources>
+                    </TreeView>-->
+                </TabItem>
+            </TabControl>
+
+            <GridSplitter Grid.Row="0" Grid.Column="1" Margin="2,0,2,0"
+                  Width="3" Background="Purple" 
+                  VerticalAlignment="Stretch" 
+                  HorizontalAlignment="Center" />
+
+            <StackPanel Grid.Row="0" Grid.Column="2">
+                <Label x:Name="ItemPath" DataContext="{Binding Path=DataGrid}" Content="{Binding Path=Path}" 
+                       Visibility="{Binding ElementName=OrigGridTab, Path=Visibility}"/>
+                <TabControl SelectedIndex="{Binding Selected}" >
+                    <TabItem x:Name="OrigGridTab" Header="Memory Info" Visibility="{Binding IsOrigGridShown}">
+                    <DataGrid x:Name="DG" IsReadOnly="True" DataContext="{Binding Path=DataGrid}" 
+                                ItemsSource="{Binding Path=GridSourceDataTable}" ColumnWidth="*"
+                                Visibility="{Binding ElementName=OrigGridTab, Path=Visibility}">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Setters>
+                                        <Setter Property="Background">  
+                                            <Setter.Value>
+                                                <Binding Path="DataContext.Row.ItemArray[2]" 
+                                                        RelativeSource="{RelativeSource Self}" 
+                                                        Converter="{StaticResource backgroundConverter}"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style.Setters>
+                                </Style>
+                            </DataGrid.RowStyle>
+                        </DataGrid>
+                    </TabItem>
+                    
+                    <TabItem x:Name="MemGridTab" Header="Memory Info" Visibility="{Binding IsMemGridShown}">
+                        <DataGrid x:Name="MG" IsReadOnly="True" DataContext="{Binding Path=DataGrid}" 
+                                ItemsSource="{Binding Path=PartitionsSourceDataTable}" ColumnWidth="*"
+                                Visibility="{Binding ElementName=MemGridTab, Path=Visibility}">
+                        </DataGrid>
+                    </TabItem>
+                </TabControl>
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+</Window>

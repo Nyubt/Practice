@@ -1,0 +1,59 @@
+﻿<Window x:Class="TicTacToe.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TicTacToe"
+        mc:Ignorable="d"
+        Title="Tic Tac Toe" Height="600" Width="450" ResizeMode="NoResize">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="FontSize" Value="100"/>
+        </Style>
+        <Style TargetType="Button" x:Key="SpecialButton">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="false">
+                    <!--<Setter Property="Background" Value="Red"/>
+                    <Setter Property="BorderBrush" Value="#FFADB2B5"/>
+                    <Setter Property="TextElement.Foreground" Value="#FF838383"/>-->
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    
+    <Grid x:Name="mainGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--<Button x:Name="Button0_0" Margin="5" Grid.Column="0" Grid.Row="0" Click="PlayButton_Click"/>
+        <Button x:Name="Button1_0" Margin="5" Grid.Column="1" Grid.Row="0" Click="PlayButton_Click"/>
+        <Button x:Name="Button2_0" Margin="5" Grid.Column="2" Grid.Row="0" Click="PlayButton_Click"/>
+                                                                           
+        <Button x:Name="Button0_1" Margin="5" Grid.Column="0" Grid.Row="1" Click="PlayButton_Click"/>
+        <Button x:Name="Button1_1" Margin="5" Grid.Column="1" Grid.Row="1" Click="PlayButton_Click"/>
+        <Button x:Name="Button2_1" Margin="5" Grid.Column="2" Grid.Row="1" Click="PlayButton_Click"/>
+                                                                           
+        <Button x:Name="Button0_2" Margin="5" Grid.Column="0" Grid.Row="2" Click="PlayButton_Click"/>
+        <Button x:Name="Button1_2" Margin="5" Grid.Column="1" Grid.Row="2" Click="PlayButton_Click"/>
+        <Button x:Name="Button2_2" Margin="5" Grid.Column="2" Grid.Row="2" Click="PlayButton_Click"/>
+        -->
+        <StackPanel HorizontalAlignment="Center" Grid.ColumnSpan="3" Grid.Row="3" 
+                    Orientation="Horizontal">            
+            <Button x:Name="NewGameButton" FontSize="18" FontWeight="Bold" Content="New Game" 
+                    Height="100" Width="100" Margin="30 0" Click="NewGameButton_Click"/>
+            <Button x:Name="QuitButton" FontSize="18" FontWeight="Bold" Content="Quit" 
+                    Height="100" Width="100" Margin="30 0" Click="QuitButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
